@@ -55,7 +55,7 @@ def g():
     if wine == 3:
         wine_url = "https://upload.wikimedia.org/wikipedia/commons/e/e9/Minsk_Metro_Line_3.png"
     elif wine == 4:
-        wine_url = "https://upload.wikimedia.org/wikipedia/commons/c/ce/Linea_4.png"
+        wine_url = "https://upload.wikimedia.org/wikipedia/commons/2/28/MRT_Singapore_Destination_4.png"
     elif wine == 5:
         wine_url = "https://upload.wikimedia.org/wikipedia/commons/4/43/MRT_Singapore_Destination_5.png"
     elif wine == 6:
