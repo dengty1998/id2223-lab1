@@ -1,12 +1,14 @@
 import modal
 
 LOCAL = False
+# run code locally or deploy it on Modal
 
 if LOCAL == False:
     stub = modal.Stub("wine_daily")
     image = modal.Image.debian_slim().pip_install(["hopsworks"])
 
-    @stub.function(image=image, schedule=modal.Period(days=1), secret=modal.Secret.from_name("HOPSWORKS_API_KEY"))
+    @stub.function(image=image, schedule=modal.Period(hours=3), secret=modal.Secret.from_name("HOPSWORKS_API_KEY"))
+    # we can set schedule for re-exection here
     def f():
         g()
 
@@ -14,7 +16,7 @@ if LOCAL == False:
 def generate_wine(name, volatile_acidity_max, volatile_acidity_min, chlorides_max, chlorides_min, density_max, density_min, alcohol_max, alcohol_min
                   ):
     """
-    Returns a single iris flower as a single row in a DataFrame
+    Returns a single wine as a single row in a DataFrame
     """
     import pandas as pd
     import random
@@ -30,7 +32,7 @@ def generate_wine(name, volatile_acidity_max, volatile_acidity_min, chlorides_ma
 
 def get_random_wine():
     """
-    Returns a DataFrame containing one random iris flower
+    Returns a DataFrame containing one random wine
     """
     import pandas as pd
     import random
@@ -50,7 +52,7 @@ def get_random_wine():
     q9_df = generate_wine(
         9, 0.25, 0.35, 0.02, 0.035, 0.989, 0.997, 10.5, 13)
 
-    # randomly pick one of these 3 and write it to the featurestore
+    # randomly pick one of these 7 and write it to the featurestore
     pick_random = random.uniform(0, 100)
     if pick_random >= 98:
         wine_df = q3_df
@@ -87,6 +89,7 @@ def g():
     wine_df = get_random_wine()
 
     wine_fg = fs.get_feature_group(name="wine", version=4)
+    # pay attention to version
     wine_fg.insert(wine_df)
 
 

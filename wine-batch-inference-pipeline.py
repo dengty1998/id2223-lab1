@@ -4,13 +4,22 @@ from io import BytesIO
 
 LOCAL = False
 if LOCAL == False:
-    stub = modal.Stub()
+    stub = modal.Stub("batch_daily")
     hopsworks_image = modal.Image.debian_slim().pip_install(
         ["hopsworks", "joblib", "seaborn", "scikit-learn==1.1.1", "dataframe-image"])
 
-    @stub.function(image=hopsworks_image, schedule=modal.Period(days=1), secret=modal.Secret.from_name("HOPSWORKS_API_KEY"))
+    @stub.function(image=hopsworks_image, schedule=modal.Period(hours=3), secret=modal.Secret.from_name("HOPSWORKS_API_KEY"))
     def f():
         g()
+
+""" 
+Why we have this function here?
+Before I set the url, I tested the content type. It returned this: Content-Type: text/html; charset=utf-8
+However, when I run this code on modal, the return value changed: Content-Type: text/html; charset=utf-8
+Then I found the reason might be due to a mismatch between the expected image format and the actual content received.
+To resolve this issue, I set the content type header when sending the image in modal deployment. 
+What's more, the request lacks an appropriate User-Agent header.
+"""
 
 
 def download_image(url):
@@ -123,9 +132,11 @@ def g():
     # the insertion was done asynchronously, so it will take ~1 min to land on App
     history_df = pd.concat([history_df, monitor_df])
 
-    df_recent = history_df.tail(4)
-    dfi.export(df_recent, './df_recent.png', table_conversion='matplotlib')
-    dataset_api.upload("./df_recent.png", "Resources/images", overwrite=True)
+    df_recent_wine = history_df.tail(4)
+    dfi.export(df_recent_wine, './df_recent_wine.png',
+               table_conversion='matplotlib')
+    dataset_api.upload("./df_recent_wine.png",
+                       "Resources/images", overwrite=True)
 
     predictions = history_df[['prediction']]
     labels = history_df[['label']]
@@ -142,8 +153,8 @@ def g():
 
     cm = sns.heatmap(df_cm, annot=True)
     fig = cm.get_figure()
-    fig.savefig("./confusion_matrix.png")
-    dataset_api.upload("./confusion_matrix.png",
+    fig.savefig("./confusion_matrix_wine.png")
+    dataset_api.upload("./confusion_matrix_wine.png",
                        "Resources/images", overwrite=True)
 
 
@@ -156,5 +167,6 @@ if __name__ == "__main__":
     if LOCAL == True:
         g()
     else:
+        modal.runner.deploy_stub(stub)
         with stub.run():
             f.remote()

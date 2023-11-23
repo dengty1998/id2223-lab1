@@ -1,12 +1,15 @@
 # ID2223Lab1
-This repository is Lab 1 for ID2223 Scalable ML and DL in KTH. It based on [Iris Serverless ML System](https://github.com/ID2223KTH/id2223kth.github.io/tree/master/src/serverless-ml-intro)
+This repository is Lab 1 for ID2223 Scalable ML and DL in KTH. It based on [Iris Serverless ML System](https://github.com/dengty1998/id2223kth.github.io/tree/master/src/serverless-ml-intro)
 from the course repository.
 
 This Lab contains two tasks:
+
 **Task1**: use the code about iris flower identification provided by the course to learn how to implement the serverless ML systems. 
 **Task2** : build a serverless ML system for the wine quality dataset to implement the wine quality prediction function.
 
-The code in this repo **only** for Task2. The code of Task1 can be found in the previous link.
+The code in this repo is **only** for Task2. The code of Task1 can be found in the previous link.
+
+This repo is created for submission. Here is the related [repo](https://github.com/wenjianma/ID2223Lab1Task2) held by Wenjian.
 
 ## ID2223Lab1Task1
 In this task, we follow the lab tutorial. By doing this task, we learned the knowledge about how to use websites and tools like hopsworks.ai, modal.com, huggingface.com etc.
@@ -48,3 +51,25 @@ https://huggingface.co/Dengty
 
 ## Contributors
 The contributors of this repo are Tianyu Deng and Wenjian Ma.
+
+## What is interesting
+
+### Time difference
+
+![df_recent_wine](README.assets/df_recent_wine.png)
+
+![df_recent](README.assets/df_recent.png)
+
+I deployed the Modal apps iris_daily and wine_daily in Helsinki, Finland. When I set the schedule for re-execution to occur once a day, everything seemed to be going well. However, when I came back to Stockholm, Sweden and tested the code before the presentation, a tiny but interesting error happened: 
+
+I changed *schedule=modal.Period(days=1)* to *schedule=modal.Period(minutes=15)* for testing. I found that the generated iris or wine had a wrong timestamp which was 1 hour earlier than expected. Then I try to generate a iris or wine manually and locally, and it had a correct timestamp. 
+
+I'm sure the reason is time difference. I guess Modal stores local date-time and set timestamps according to this. 
+
+### Queue order
+
+![df_recent_wine](README.assets/df_recent_wine-1700697221770.png)
+
+I didn't learn the architecture of Hopsworks or Modal. Judging from the results, at least the order of the message queue was wrong. 
+
+I noticed that Hopsworks uses Kafka which can guarantee message ordering. Maybe there was an error in Yarn's task allocation? Or does the error appear on the Modal side? 
