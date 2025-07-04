@@ -7,7 +7,7 @@ This Lab contains two tasks:
 **Task1**: use the code about iris flower identification provided by the course to learn how to implement the serverless ML systems. 
 **Task2** : build a serverless ML system for the wine quality dataset to implement the wine quality prediction function.
 
-The code in this repo is **only** for Task2. The code of Task1 can be found in the previous link.
+The code in this repo is **only** for Task2. The code of Task1 can be found in the previous Iris Serverless ML System repo.
 
 This repo is created for submission. Here is the related [repo](https://github.com/wenjianma/ID2223Lab1Task2) held by Wenjian.
 
@@ -26,7 +26,7 @@ In this task, we use the similar method as Task1 to build a Serverless ML system
 
 ### How to Run
 1. Clone this repo
-2. Configure the Canda virtual environment and install requirements
+2. Configure the Conda virtual environment and install requirements
 3. Create accounts on hopsworks.ai and modal.com, create/cofigure necessary API keys and tokens
 4. Run *wine-eda-and-backfill-feature-group.ipynb*, *wine-feature-pipeline-daily.py*, *wine-training-pipeline.ipynb* and *wine-batch-inference-pipeline.py* in order
 5. Run *app.py* in folder *huggingface-spaces-wine* and *huggingface-spaces-wine-monitor* to see what will happen =）
